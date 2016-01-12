@@ -14,11 +14,11 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public class LoginRequest {
-    final String login;
+    final String email;
     final String password;
 
-    LoginRequest(String login, String password) {
-        this.login = login;
+    public LoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
 
     }

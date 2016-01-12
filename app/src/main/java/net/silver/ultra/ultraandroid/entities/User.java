@@ -7,5 +7,5 @@ import java.util.UUID;
  */
 public class User {
     public String email;
-    public UUID id;
+    public UUID userId;
 }
