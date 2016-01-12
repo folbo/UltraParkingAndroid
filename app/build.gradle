@@ -41,4 +41,8 @@ dependencies {
 
     // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
     compile 'javax.annotation:jsr250-api:1.0'
+
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
 }
