@@ -3,8 +3,11 @@ package net.silver.ultra.ultraandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.ClipData;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,8 +31,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.silver.ultra.ultraandroid.web.Api;
+import net.silver.ultra.ultraandroid.web.requests.LoginRequest;
+import net.silver.ultra.ultraandroid.web.responses.LoginResponse;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import retrofit2.Call;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -42,11 +55,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -94,6 +102,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    //disable haburger for this activity
     @Override
     protected boolean useDrawerToggle() {
         return false;
@@ -160,10 +169,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -176,8 +181,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -185,10 +190,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
@@ -201,19 +202,73 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+
+            Api api = new Api();
+            LoginResponse result = null;
+
+            Call<LoginResponse> call = api.userService.login(new LoginRequest(email, password));
+            call.enqueue(new Callback<LoginResponse>() {
+                             @Override
+                             public void onResponse(Response<LoginResponse> response) {
+                                 if (response.isSuccess()) {
+                                     // request successful (status code 200, 201)
+                                     LoginResponse result = response.body();
+
+                                     if(result.userId != null) {
+                                         //logged in
+                                         View loginButton = findViewById(R.id.nav_login);
+                                         loginButton.setVisibility(View.GONE);
+
+                                         finish();
+                                     }
+                                     else {
+                                         // no such user
+                                         showProgress(false);
+                                         new AlertDialog.Builder(LoginActivity.this)
+                                                 .setTitle("Can't login")
+                                                 .setMessage("Login or password is incorrect.")
+                                                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                     public void onClick(DialogInterface dialog, int which) {
+                                                         mEmailView.requestFocus();
+                                                     }
+                                                 })
+                                                 .setIcon(android.R.drawable.ic_dialog_alert)
+                                                 .show();
+                                     }
+
+                                 } else {
+                                     // response received but request not successful (like 400,401,403 etc)
+                                     // model is invalid
+                                     showProgress(false);
+                                     new AlertDialog.Builder(LoginActivity.this)
+                                             .setTitle("Can't login")
+                                             .setMessage("Login or password is incorrect.")
+                                             .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                 public void onClick(DialogInterface dialog, int which) {
+                                                     mEmailView.requestFocus();
+                                                 }
+                                             })
+                                             .setIcon(android.R.drawable.ic_dialog_alert)
+                                             .show();
+                                 }
+                             }
+
+                             @Override
+                             public void onFailure(Throwable t) {
+                                 new AlertDialog.Builder(LoginActivity.this)
+                                         .setTitle("Connection error")
+                                         .setMessage(t.getMessage())
+                                         .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                             public void onClick(DialogInterface dialog, int which) {
+                                                 LoginActivity.this.finish();
+                                             }
+                                         })
+                                         .setIcon(android.R.drawable.ic_dialog_alert)
+                                         .show();
+                             }
+                         }
+            );
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -295,7 +350,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mEmailView.setAdapter(adapter);
     }
 
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -306,52 +360,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -381,7 +389,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
+            //mAuthTask = null;
             showProgress(false);
 
             if (success) {
@@ -394,7 +402,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
+            //mAuthTask = null;
             showProgress(false);
         }
     }
