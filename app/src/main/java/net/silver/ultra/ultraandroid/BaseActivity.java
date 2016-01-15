@@ -1,7 +1,10 @@
 package net.silver.ultra.ultraandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -10,9 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,9 +27,13 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private int selectedNavItemId;
 
+    protected AppSettings appSettings;
+
     @Override
     public void setContentView(int layoutResID)
     {
+        appSettings = new AppSettings(this);
+
         /**
          * This is going to be our actual root layout.
          */
@@ -69,6 +78,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected void setUpNavView()
     {
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_login = menu.findItem(R.id.nav_login);
+
+        if(appSettings.getLogin())
+            nav_login.setVisible(false);
+        else
+            nav_login.setVisible(true);
 
         if( useDrawerToggle()) { // use the hamburger menu
             drawerToggle = new ActionBarDrawerToggle(this, fullLayout, toolbar,
