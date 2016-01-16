@@ -21,7 +21,7 @@ import retrofit2.Retrofit;
 
 
 public final class Api {
-    public static final String API_URL = "http://ultra.dev/api/";
+    public static final String API_URL = "http://localhost:4665/api";
     private Retrofit retrofit;
 
     public UserService userService;

@@ -36,11 +36,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.silver.ultra.ultraandroid.web.Api;
-import net.silver.ultra.ultraandroid.web.ApiError;
-import net.silver.ultra.ultraandroid.web.myAwesomeCallback;
-import net.silver.ultra.ultraandroid.web.requests.LoginRequest;
-import net.silver.ultra.ultraandroid.web.responses.LoginResponse;
+import net.silver.ultra.ultraandroid.rest.AuthenticationRest;
+import net.silver.ultra.ultraandroid.rest.model.LoginParams;
+import net.silver.ultra.ultraandroid.rest.model.LoginResponse;
+
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.rest.RestService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,9 +61,12 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 
 
-
+@EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
+
+    @RestService
+    AuthenticationRest authenticationRest;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -214,45 +219,49 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             // perform the user login attempt.
             showProgress(true);
 
-            Api api = new Api();
-            api.setGiveMeUserRequest(new Callable<LoginRequest>() {
-                @Override
-                public LoginRequest call() throws Exception {
-                    return new LoginRequest(email, password);
-                }
-            });
 
-            LoginResponse result = null;
+            login(email,password);
 
-            api.call(api.userService.login(new LoginRequest(email, password)), new myAwesomeCallback<LoginResponse>() {
-                @Override
-                public void onSuccess(LoginResponse response) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("ok")
-                            .setMessage("ok")
-                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mEmailView.requestFocus();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
 
-                @Override
-                public void onError(ApiError apiError) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("Can't login")
-                            .setMessage("Login or password is incorrect.")
-                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mEmailView.requestFocus();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
-            });
+//            Api api = new Api();
+//            api.setGiveMeUserRequest(new Callable<LoginRequest>() {
+//                @Override
+//                public LoginRequest call() throws Exception {
+//                    return new LoginRequest(email, password);
+//                }
+//            });
+//
+//            LoginResponse result = null;
+//
+//            api.call(api.userService.login(new LoginRequest(email, password)), new myAwesomeCallback<LoginResponse>() {
+//                @Override
+//                public void onSuccess(LoginResponse response) {
+//                    new AlertDialog.Builder(LoginActivity.this)
+//                            .setTitle("ok")
+//                            .setMessage("ok")
+//                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    mEmailView.requestFocus();
+//                                }
+//                            })
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
+//                }
+//
+//                @Override
+//                public void onError(ApiError apiError) {
+//                    new AlertDialog.Builder(LoginActivity.this)
+//                            .setTitle("Can't login")
+//                            .setMessage("Login or password is incorrect.")
+//                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    mEmailView.requestFocus();
+//                                }
+//                            })
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
+//                }
+//            });
 /*
             Call<LoginResponse> call = api.userService.login(new LoginRequest(email, password));
             call.enqueue(new Callback<LoginResponse>() {
@@ -315,6 +324,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                          }
             );*/
         }
+    }
+
+    @Background
+    public void login(String email,String password) {
+        authenticationRest.login(new LoginParams(email, password));
     }
 
     /**

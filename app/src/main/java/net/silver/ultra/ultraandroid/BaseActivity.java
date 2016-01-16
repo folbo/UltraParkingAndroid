@@ -134,11 +134,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_login:
-                startActivity(new Intent(this, LoginActivity.class));
+                LoginActivity_.intent(this).start();
+                //startActivity(new Intent(this, LoginActivity_.class));
                 return true;
 
             case R.id.nav_logout:
-                startActivity(new Intent(this, LoginActivity.class));
+                LoginActivity_.intent(this).start();
                 return true;
         }
 
