@@ -1,58 +1,67 @@
 package net.silver.ultra.ultraandroid;
 
-import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
 
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
+import net.silver.ultra.ultraandroid.parking.model.GetAllParkingsReturns;
+import net.silver.ultra.ultraandroid.util.RestManager;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+@EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements OnMapReadyCallback {
 
-    @Bind(R.id.fab) FloatingActionButton fab;
-    GoogleMap map;
-    Location myLocation;
+    @App
+    MyApp app;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+    @Bean
+    RestManager restManager;
 
-        //fab.hide();
+    @ViewById(R.id.fab) protected FloatingActionButton fab;
+    protected GoogleMap map;
+    protected Location myLocation;
+    protected List<MarkerOptions> markers = new ArrayList<>();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+    @AfterViews
+    void initViews(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-    @OnClick(R.id.fab)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //fab.hide();
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+    }
+
+    @Click(R.id.fab)
     public void OnFabClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
@@ -75,9 +84,23 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
                         .build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
 
+
+        getAllParkings();
+    }
+    @Background
+    protected void getAllParkings(){
+        GetAllParkingsReturns[] all = restManager.getParkingRestService().getAll();
+        for(GetAllParkingsReturns parking : all){
+            markers.add(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
+        }
+
+        updateMarkers();
     }
 
-    private void centerMapOnMyLocation() {
-
+    @UiThread
+    protected void updateMarkers(){
+        for(MarkerOptions marker : markers){
+            map.addMarker(marker);
+        }
     }
 }

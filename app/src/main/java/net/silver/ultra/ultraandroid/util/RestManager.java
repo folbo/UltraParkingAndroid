@@ -28,7 +28,5 @@ public class RestManager {
         return authenticationRest;
     }
 
-    public ParkingRestService getParkingRestService() {
-        return parkingRestService;
-    }
+    public ParkingRestService getParkingRestService() { return parkingRestService; }
 }

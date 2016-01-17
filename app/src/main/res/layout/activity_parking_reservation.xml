@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jakaś informacj"
+            android:text="Jakaś informacja"
             android:id="@+id/textView" />
 
         <EditText
@@ -32,14 +32,14 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button"
+                android:text="Navigate"
+                android:id="@+id/navigateButton"
                 android:layout_weight="0.5" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="Reserve"
                 android:id="@+id/reservationButton"
                 android:layout_weight="0.5" />
         </LinearLayout>
