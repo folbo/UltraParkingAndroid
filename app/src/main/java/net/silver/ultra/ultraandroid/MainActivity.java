@@ -28,13 +28,15 @@ import com.google.android.gms.maps.model.LatLng;
 
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
+
+@EActivity
 public class MainActivity extends BaseActivity implements OnMapReadyCallback {
 
-    @Bind(R.id.fab) FloatingActionButton fab;
+    @ViewById(R.id.fab) FloatingActionButton fab;
     GoogleMap map;
     Location myLocation;
 
@@ -42,7 +44,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         //fab.hide();
 
@@ -52,7 +53,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
     }
 
-    @OnClick(R.id.fab)
+    @Click(R.id.fab)
     public void OnFabClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
