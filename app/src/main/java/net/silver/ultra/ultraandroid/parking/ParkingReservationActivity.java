@@ -69,10 +69,6 @@ public class ParkingReservationActivity extends Activity {
     @ViewById(R.id.reservation_parking_name)
     TextView parkingName;
 
-    @Extra("incidentId")
-    String incidentId;
-    @Extra("incidentObjectTypeId")
-    String incidentObjectTypeId;
     @Extra("e_parkingId")
     UUID e_parkingId;
     @Extra("e_parkingName")
@@ -80,21 +76,18 @@ public class ParkingReservationActivity extends Activity {
 
     @AfterViews
     void initView() {
-        //TODO: inicjalizacja widoku itp labelek
         parkingName.setText(e_parkingName);
     }
 
     @Click(R.id.reservationButton)
     void reservationButtonClicked() {
         //musisz przed tym zwalidowac czy uzytjkownik wypelnil co mial wypelnic
-        reserveParking(e_parkingId.toString());
+        reserveParking(e_parkingId);
     }
 
 
     @Background
-    void reserveParking(final String createRequest) {
-        //TODO: Wyslij zadanie na serwer
-        //Jakis asynctask
+    void reserveParking(final UUID createRequest) {
         ReserveReturns parkingPlace = restManager.getParkingRestService().reserveParking(new ReserveParams(createRequest));
         afterCreateIncidentObject(parkingPlace);
     }

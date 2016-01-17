@@ -20,6 +20,7 @@ public class GetAllParkingsReturns implements Serializable{
     double locationLatitude;
     double locationLongitude;
 
+    //getters & setters
     public UUID setId(UUID id){ return this.id = id; }
     public UUID getId(){ return this.id; }
 

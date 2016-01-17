@@ -1,25 +1,24 @@
 package net.silver.ultra.ultraandroid.parking.model;
 
 import java.io.Serializable;
-
-import javax.crypto.SecretKey;
+import java.util.UUID;
 
 /**
  * Created by Sylwekqaz on 17.01.2016.
  */
 public class ReserveParams implements Serializable {
-    private String parkingId;
+    private UUID parkingId;
 
-    public ReserveParams(String parkingId) {
+    public ReserveParams(UUID parkingId) {
         this.parkingId = parkingId;
     }
 
-    public String getParkingId() {
+    // getters & setters
+    public UUID getParkingId() {
         return parkingId;
     }
-
-    public void setParkingId(String parkingId) {
-        this.parkingId = parkingId;
+    public UUID setParkingId(UUID parkingId) {
+        return this.parkingId = parkingId;
     }
 }
 

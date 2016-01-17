@@ -55,20 +55,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         mapFragment.getMapAsync(this);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //fab.hide();
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
-    }
-
     @Click(R.id.fab)
     public void OnFabClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        ParkingReservationActivity_.intent(this).start();
     }
 
     @Override
@@ -89,14 +79,15 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         .build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
 
-
         getAllParkings();
     }
+
     @Background
     protected void getAllParkings(){
         parkings.clear();
 
         GetAllParkingsReturns[] all = restManager.getParkingRestService().getAll();
+
         for(GetAllParkingsReturns parking : all){
             ParkingModel marker = new ParkingModel();
             marker.setParkingName(parking.getName());
@@ -135,27 +126,25 @@ class ParkingModel {
     String parkingName;
     MarkerOptions markerOptions;
 
-    public MarkerOptions getMarkerOptions() {
-        return markerOptions;
-    }
-
+    // getters & setters
     public UUID getParkingId() {
         return parkingId;
     }
-
-    public MarkerOptions setMarkerOptions(MarkerOptions markerOptions) {
-        return this.markerOptions = markerOptions;
-    }
-
     public UUID setParkingId(UUID parkingId) {
         return this.parkingId = parkingId;
+    }
+
+    public MarkerOptions getMarkerOptions() {
+        return markerOptions;
+    }
+    public MarkerOptions setMarkerOptions(MarkerOptions markerOptions) {
+        return this.markerOptions = markerOptions;
     }
 
     public String getParkingName() {
         return parkingName;
     }
-
-    public void setParkingName(String parkingName) {
-        this.parkingName = parkingName;
+    public String setParkingName(String parkingName) {
+        return this.parkingName = parkingName;
     }
 }
