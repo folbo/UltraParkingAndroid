@@ -45,8 +45,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     @ViewById(R.id.fab) protected FloatingActionButton fab;
     protected GoogleMap map;
     protected Location myLocation;
-    protected List<ParkingMarker> parkings = new ArrayList<>();
-    private HashMap<Marker, UUID> MarkerParkingMap = new HashMap<Marker, UUID>();
+    protected List<ParkingModel> parkings = new ArrayList<>();
+    private HashMap<Marker, ParkingModel> MarkerParkingMap = new HashMap<Marker, ParkingModel>();
 
     @AfterViews
     void initViews(){
@@ -94,9 +94,15 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
     @Background
     protected void getAllParkings(){
+        parkings.clear();
+
         GetAllParkingsReturns[] all = restManager.getParkingRestService().getAll();
         for(GetAllParkingsReturns parking : all){
-            ParkingMarker marker = new ParkingMarker(parking.getId(), new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
+            ParkingModel marker = new ParkingModel();
+            marker.setParkingName(parking.getName());
+            marker.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
+            marker.setParkingId(parking.getId());
+
             parkings.add(marker);
         }
 
@@ -105,27 +111,29 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @UiThread
     protected void updateMarkers(){
-        for(ParkingMarker marker : parkings){
-            Marker m = map.addMarker(marker.getMarkerOptions());
-            MarkerParkingMap.put(m, marker.getParkingId());
+        MarkerParkingMap.clear();
+        for(ParkingModel parking : parkings){
+            Marker m = map.addMarker(parking.getMarkerOptions());
+            MarkerParkingMap.put(m, parking);
         }
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ParkingReservationActivity_.intent(this).parkingId(MarkerParkingMap.get(marker)).start();
+        ParkingModel parking = MarkerParkingMap.get(marker);
+
+        ParkingReservationActivity_.intent(this)
+                .e_parkingId(parking.getParkingId())
+                .e_parkingName(parking.getParkingName())
+                .start();
         return true;
     }
 }
 
-class ParkingMarker {
+class ParkingModel {
     UUID parkingId;
+    String parkingName;
     MarkerOptions markerOptions;
-
-    public ParkingMarker(UUID parkingId, MarkerOptions markerOptions){
-        this.markerOptions = markerOptions;
-        this.parkingId = parkingId;
-    }
 
     public MarkerOptions getMarkerOptions() {
         return markerOptions;
@@ -141,5 +149,13 @@ class ParkingMarker {
 
     public UUID setParkingId(UUID parkingId) {
         return this.parkingId = parkingId;
+    }
+
+    public String getParkingName() {
+        return parkingName;
+    }
+
+    public void setParkingName(String parkingName) {
+        this.parkingName = parkingName;
     }
 }

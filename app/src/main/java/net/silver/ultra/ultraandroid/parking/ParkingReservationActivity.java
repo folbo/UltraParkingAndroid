@@ -73,19 +73,21 @@ public class ParkingReservationActivity extends Activity {
     String incidentId;
     @Extra("incidentObjectTypeId")
     String incidentObjectTypeId;
-    @Extra("parkingId")
-    UUID parkingId;
+    @Extra("e_parkingId")
+    UUID e_parkingId;
+    @Extra("e_parkingName")
+    String e_parkingName;
 
     @AfterViews
     void initView() {
         //TODO: inicjalizacja widoku itp labelek
-        parkingName.setText(parkingId.toString());
+        parkingName.setText(e_parkingName);
     }
 
     @Click(R.id.reservationButton)
     void reservationButtonClicked() {
         //musisz przed tym zwalidowac czy uzytjkownik wypelnil co mial wypelnic
-        reserveParking("e5f18895-0aec-445d-8687-bd0f2e47dfd4");
+        reserveParking(e_parkingId.toString());
     }
 
 
