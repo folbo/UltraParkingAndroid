@@ -99,8 +99,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         } else if(useToolbar() && getSupportActionBar() != null) {
             // Use home/back button instead
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(getResources()
-                    .getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+            //getSupportActionBar().setHomeAsUpIndicator(getResources()
+             //       .getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
         }
     }
 
@@ -156,5 +156,4 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
 }

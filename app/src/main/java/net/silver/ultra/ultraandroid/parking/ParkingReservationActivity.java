@@ -1,6 +1,7 @@
 package net.silver.ultra.ultraandroid.parking;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -80,5 +81,13 @@ public class ParkingReservationActivity extends BaseActivity {
     @Override
     protected boolean useDrawerToggle(){
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            onBackPressed();
+
+        return super.onOptionsItemSelected(item);
     }
 }

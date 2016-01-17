@@ -39,11 +39,7 @@
         <activity
             android:name=".parking.ParkingReservationActivity_"
             android:label="@string/prompt_password"
-            android:parentActivityName=".MainActivity_"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="PARENT_ACTIVITY"
-                android:value=".MainActivity_" />
         </activity>
 
     </application>
