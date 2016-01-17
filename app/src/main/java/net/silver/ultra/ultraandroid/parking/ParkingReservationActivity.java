@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import net.silver.ultra.ultraandroid.BaseActivity;
 import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
 import net.silver.ultra.ultraandroid.parking.event.ParkingReservedEvent;
@@ -55,7 +56,7 @@ import java.util.UUID;
  * @author gmatusik
  */
 @EActivity(R.layout.activity_parking_reservation)
-public class ParkingReservationActivity extends Activity {
+public class ParkingReservationActivity extends BaseActivity {
 
     @App
     MyApp app;
@@ -107,5 +108,10 @@ public class ParkingReservationActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         app.getBus().unregister(this);
+    }
+
+    @Override
+    protected boolean useDrawerToggle(){
+        return false;
     }
 }
