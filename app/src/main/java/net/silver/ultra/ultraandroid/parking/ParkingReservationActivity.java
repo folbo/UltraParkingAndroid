@@ -1,26 +1,8 @@
 package net.silver.ultra.ultraandroid.parking;
 
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import net.silver.ultra.ultraandroid.BaseActivity;
 import net.silver.ultra.ultraandroid.MyApp;
@@ -37,24 +19,10 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.RestService;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-/**
- * @author gmatusik
- */
 @EActivity(R.layout.activity_parking_reservation)
 public class ParkingReservationActivity extends BaseActivity {
 
@@ -90,11 +58,10 @@ public class ParkingReservationActivity extends BaseActivity {
     @Background
     void reserveParking(final UUID createRequest) {
         ReserveReturns parkingPlace = restManager.getParkingRestService().reserveParking(new ReserveParams(createRequest));
-        afterCreateIncidentObject(parkingPlace);
-    }
 
-    private void afterCreateIncidentObject(ReserveReturns reservation) {
-        app.getBus().post(new ParkingReservedEvent(reservation));
+        if(parkingPlace != null)
+            app.getBus().post(new ParkingReservedEvent(parkingPlace));
+
         finish();
     }
 

@@ -1,9 +1,11 @@
 package net.silver.ultra.ultraandroid.util;
 
 import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
+import net.silver.ultra.ultraandroid.parking.errorhandlers.ParkingServiceErrorHandler;
 import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.rest.RestService;
 
@@ -12,16 +14,17 @@ import org.androidannotations.annotations.rest.RestService;
  */
 @EBean(scope = EBean.Scope.Singleton)
 public class RestManager {
+    @Bean
+    ParkingServiceErrorHandler parkingServiceErrorHandler;
 
     @RestService
     AuthenticationRest authenticationRest;
-
     @RestService
     ParkingRestService parkingRestService;
 
     @AfterInject
     void init(){
-
+        parkingRestService.setRestErrorHandler(parkingServiceErrorHandler);
     }
 
     public AuthenticationRest getAuthenticationRest() {
