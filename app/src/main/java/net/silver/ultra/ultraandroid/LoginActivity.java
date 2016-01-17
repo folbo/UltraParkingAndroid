@@ -49,18 +49,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import retrofit2.Call;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-
-
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 

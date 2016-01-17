@@ -26,6 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,6 +56,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     public void OnFabClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+        ParkingReservationActivity_.intent(this).start();
     }
 
     @Override

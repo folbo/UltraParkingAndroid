@@ -12,12 +12,13 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import retrofit2.http.Body;
 
+
 /**
  * Created by Sylwekqaz on 15.01.2016.
  */
 
-@Rest(rootUrl = "http://192.168.56.1:4665/api" ,converters = { MappingJackson2HttpMessageConverter.class })
+@Rest(rootUrl = "http://ultra.dev/api" ,converters = { MappingJackson2HttpMessageConverter.class })
 public interface AuthenticationRest extends RestClientErrorHandling {
         @Post("/account/login")
-        LoginResponse login(@Body LoginParams params);
+        LoginResponse login( @Body LoginParams params);
 }
