@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author gmatusik
@@ -64,14 +66,20 @@ public class ParkingReservationActivity extends Activity {
     @ViewById(R.id.example)
     EditText exampleEditText;
 
+    @ViewById(R.id.reservation_parking_name)
+    TextView parkingName;
+
     @Extra("incidentId")
     String incidentId;
     @Extra("incidentObjectTypeId")
     String incidentObjectTypeId;
+    @Extra("parkingId")
+    UUID parkingId;
 
     @AfterViews
     void initView() {
         //TODO: inicjalizacja widoku itp labelek
+        parkingName.setText(parkingId.toString());
     }
 
     @Click(R.id.reservationButton)

@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Jakaś informacja"
-            android:id="@+id/textView" />
+            android:id="@+id/reservation_parking_name" />
 
         <EditText
             android:layout_width="match_parent"
