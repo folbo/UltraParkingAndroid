@@ -93,8 +93,8 @@ public class ParkingReservationActivity extends BaseActivity {
         afterCreateIncidentObject(parkingPlace);
     }
 
-    private void afterCreateIncidentObject(ReserveReturns incidentObjectId) {
-        app.getBus().post(new ParkingReservedEvent(incidentObjectId));
+    private void afterCreateIncidentObject(ReserveReturns reservation) {
+        app.getBus().post(new ParkingReservedEvent(reservation));
         finish();
     }
 

@@ -37,8 +37,8 @@ public class MyApp extends Application {
 
     @Subscribe
     public void onParkingReservedEvent(ParkingReservedEvent event) {
-        String messege = String.format("Miejsce %d %s", event.getReservedPlace().getNumber(), event.getReservedPlace().getSegmentName());
-        Toast toast = Toast.makeText(this, messege, Toast.LENGTH_SHORT);
+        String message = String.format("Miejsce %d %s", event.getReservedPlace().getNumber(), event.getReservedPlace().getSegmentName());
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
