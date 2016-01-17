@@ -1,9 +1,7 @@
 package net.silver.ultra.ultraandroid.util;
 
-import android.widget.Toast;
-
+import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
 import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
-import net.silver.ultra.ultraandroid.rest.AuthenticationRest;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;

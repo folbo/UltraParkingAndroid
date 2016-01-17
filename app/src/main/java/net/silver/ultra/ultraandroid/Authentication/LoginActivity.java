@@ -1,53 +1,46 @@
-package net.silver.ultra.ultraandroid;
+package net.silver.ultra.ultraandroid.Authentication;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ClipData;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.silver.ultra.ultraandroid.rest.AuthenticationRest;
-import net.silver.ultra.ultraandroid.rest.model.LoginParams;
-import net.silver.ultra.ultraandroid.rest.model.LoginResponse;
+import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
+import net.silver.ultra.ultraandroid.BaseActivity;
+import net.silver.ultra.ultraandroid.MyApp;
+import net.silver.ultra.ultraandroid.R;
+import net.silver.ultra.ultraandroid.util.RestManager;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.rest.RestService;
+import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -59,28 +52,33 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
 
-    @RestService
-    AuthenticationRest authenticationRest;
+    @App
+    MyApp app;
+
+    @Bean
+    RestManager restManager;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    @ViewById(R.id.email) protected AutoCompleteTextView mEmailView;
+    @ViewById(R.id.password) protected EditText mPasswordView;
+    @ViewById(R.id.login_progress) protected View mProgressView;
+    @ViewById(R.id.login_form) protected View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
+    }
+
+    @AfterViews
+    void initViews(){
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -91,25 +89,16 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 return false;
             }
         });
+    }
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+    @Click(R.id.email_sign_in_button)
+    void onSignInClick(View view) {
+        attemptLogin();
+    }
 
-        Button mRegisterAccountButton = (Button) findViewById(R.id.register_new_account_button);
-        mRegisterAccountButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //attemptRegister();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+    @Click(R.id.register_new_account_button)
+    void onRegisterClick(View view) {
+        //attemptRegister();
     }
 
     //disable haburger for this activity
@@ -322,8 +311,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @Background
     public void login(String email,String password) {
-        authenticationRest.login(new LoginParams(email, password));
+        restManager.getAuthenticationRest().login(new LoginParams(email, password));
+        finish();
     }
+
 
     /**
      * Shows the progress UI and hides the login form.

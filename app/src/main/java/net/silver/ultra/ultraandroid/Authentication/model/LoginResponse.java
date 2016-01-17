@@ -1,4 +1,4 @@
-package net.silver.ultra.ultraandroid.rest.model;
+package net.silver.ultra.ultraandroid.Authentication.model;
 
 import java.io.Serializable;
 
@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class LoginResponse implements Serializable {
     private String userId;
+    private String status;
 
     public String getUserId() {
         return userId;
@@ -14,6 +15,14 @@ public class LoginResponse implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

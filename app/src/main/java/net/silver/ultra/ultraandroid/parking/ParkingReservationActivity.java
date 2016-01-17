@@ -76,7 +76,6 @@ public class ParkingReservationActivity extends Activity {
 
     @Click(R.id.reservationButton)
     void reservationButtonClicked() {
-        Toast.makeText(this, getString(R.string.accept), Toast.LENGTH_SHORT).show();
         //musisz przed tym zwalidowac czy uzytjkownik wypelnil co mial wypelnic
         reserveParking("e5f18895-0aec-445d-8687-bd0f2e47dfd4");
     }

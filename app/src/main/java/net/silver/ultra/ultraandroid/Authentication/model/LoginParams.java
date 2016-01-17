@@ -1,4 +1,4 @@
-package net.silver.ultra.ultraandroid.rest.model;
+package net.silver.ultra.ultraandroid.Authentication.model;
 
 import java.io.Serializable;
 
