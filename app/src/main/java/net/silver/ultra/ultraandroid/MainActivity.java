@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @Click(R.id.fab)
     public void OnFabClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
@@ -81,6 +81,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         for(ParkingModel parking : all){
             ParkingViewModel model = new ParkingViewModel();
             model.setParkingName(parking.getName());
+            model.setOwnerName(parking.getOwnerId().toString());
+            model.setFreePlaces(parking.getFreePlacesCount());
+            model.setTotalPlaces(parking.getTotalPlacesCount());
             model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
             model.setParkingId(parking.getId());
 
@@ -106,6 +109,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         ParkingReservationActivity_.intent(this)
                 .e_parkingId(parking.getParkingId())
                 .e_parkingName(parking.getParkingName())
+                .e_parkingFreePlaces(parking.getFreePlaces())
+                .e_parkingOwnerName(parking.getOwnerName())
                 .start();
         return true;
     }
@@ -114,6 +119,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 class ParkingViewModel {
     UUID parkingId;
     String parkingName;
+    int freePlaces;
+    int totalPlaces;
+    String ownerName;
+
     MarkerOptions markerOptions;
 
     // getters & setters
@@ -136,5 +145,26 @@ class ParkingViewModel {
     }
     public String setParkingName(String parkingName) {
         return this.parkingName = parkingName;
+    }
+
+    public int getFreePlaces() {
+        return freePlaces;
+    }
+    public int setFreePlaces(int freePlaces) {
+        return this.freePlaces = freePlaces;
+    }
+
+    public int getTotalPlaces() {
+        return totalPlaces;
+    }
+    public int setTotalPlaces(int totalPlaces) {
+        return this.totalPlaces = totalPlaces;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+    public String setOwnerName(String ownerName) {
+        return this.ownerName = ownerName;
     }
 }

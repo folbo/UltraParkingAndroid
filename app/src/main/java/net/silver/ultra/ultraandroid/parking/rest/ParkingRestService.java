@@ -12,7 +12,10 @@ import org.androidannotations.api.rest.RestClientErrorHandling;
 import org.androidannotations.api.rest.RestClientRootUrl;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
+import java.util.UUID;
+
 import retrofit2.http.Body;
+import retrofit2.http.Path;
 
 
 /**
@@ -26,6 +29,9 @@ public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHa
 
     @Get("/parking/all")
     ParkingModel[] getAll();
+
+    @Get("/parking/{id}")
+    ParkingModel getOne(@Path("id") String id);
 
     @Get("/test/authtest")
     @RequiresCookie({".AspNet.ApplicationCookie"})
