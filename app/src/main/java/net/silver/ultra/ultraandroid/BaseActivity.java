@@ -29,13 +29,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private int selectedNavItemId;
 
-    protected AppSettings appSettings;
 
     @Override
     public void setContentView(int layoutResID)
     {
-        appSettings = new AppSettings(this);
-
         /**
          * This is going to be our actual root layout.
          */
@@ -83,11 +80,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         Menu menu = navigationView.getMenu();
         MenuItem nav_login = menu.findItem(R.id.nav_login);
-
-        if(appSettings.getLogin())
-            nav_login.setVisible(false);
-        else
-            nav_login.setVisible(true);
 
         if( useDrawerToggle()) { // use the hamburger menu
             drawerToggle = new ActionBarDrawerToggle(this, fullLayout, toolbar,

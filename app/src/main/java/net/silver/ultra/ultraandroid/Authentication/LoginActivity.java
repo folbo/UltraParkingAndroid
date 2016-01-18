@@ -25,6 +25,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.silver.ultra.ultraandroid.AppPrefs;
+import net.silver.ultra.ultraandroid.AppPrefs_;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
 import net.silver.ultra.ultraandroid.BaseActivity;
 import net.silver.ultra.ultraandroid.MyApp;
@@ -38,6 +40,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +100,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     @Click(R.id.register_new_account_button)
+    @Background
     void onRegisterClick(View view) {
-        //attemptRegister();
+        restManager.getAuthenticationRest().testPass();
     }
 
     //disable haburger for this activity
@@ -309,9 +313,17 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         }
     }
 
+    @Pref
+    AppPrefs_ appPrefs;
+
     @Background
     public void login(String email,String password) {
         restManager.getAuthenticationRest().login(new LoginParams(email, password));
+
+        String pass = restManager.getAuthenticationRest().testPass();
+        restManager.SaveAuthCookie();
+
+        //String notPass = restManager.getAuthenticationRest().testNotPass();
         finish();
     }
 

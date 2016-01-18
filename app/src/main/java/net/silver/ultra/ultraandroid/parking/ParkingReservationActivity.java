@@ -11,6 +11,7 @@ import net.silver.ultra.ultraandroid.R;
 import net.silver.ultra.ultraandroid.parking.event.ParkingReservedEvent;
 import net.silver.ultra.ultraandroid.parking.model.ReserveParams;
 import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
+import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
 import net.silver.ultra.ultraandroid.util.RestManager;
 
 import org.androidannotations.annotations.AfterViews;
@@ -53,6 +54,15 @@ public class ParkingReservationActivity extends BaseActivity {
     void reservationButtonClicked() {
         //musisz przed tym zwalidowac czy uzytjkownik wypelnil co mial wypelnic
         reserveParking(e_parkingId);
+    }
+
+
+    @Click(R.id.navigateButton)
+    void navigateButtonClicked(){ test();    }
+
+    @Background
+    void test(){
+        restManager.getParkingRestService().testPass();
     }
 
 

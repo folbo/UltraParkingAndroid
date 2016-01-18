@@ -6,6 +6,7 @@ import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
 
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Post;
+import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.RestClientErrorHandling;
 import org.androidannotations.api.rest.RestClientRootUrl;
@@ -25,4 +26,10 @@ public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHa
 
     @Get("/parking/all")
     GetAllParkingsReturns[] getAll();
+
+    @Get("/test/authtest")
+    @RequiresCookie({".AspNet.ApplicationCookie"})
+    String testPass();
+
+    void setCookie(String name, String value);
 }
