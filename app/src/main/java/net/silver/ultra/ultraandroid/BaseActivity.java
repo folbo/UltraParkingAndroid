@@ -18,10 +18,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.otto.Subscribe;
 
 import net.silver.ultra.ultraandroid.Authentication.LoginActivity_;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
+import net.silver.ultra.ultraandroid.util.RestManager;
 
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+
+@EActivity(R.layout.activity_base)
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    @App
+    protected MyApp app;
+
+    @Pref
+    protected AppPrefs_ prefs;
+
+    @Bean
+    protected RestManager restManager;
 
     private NavigationView navigationView;
     private DrawerLayout fullLayout;
@@ -74,12 +98,21 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void setLoginButtons(boolean loggedIn)
+    {
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_login = menu.findItem(R.id.nav_login);
+        MenuItem nav_logout = menu.findItem(R.id.nav_logout);
+
+            nav_login.setVisible(!loggedIn);
+            nav_logout.setVisible(loggedIn);
+    }
+
     protected void setUpNavView()
     {
         navigationView.setNavigationItemSelectedListener(this);
 
-        Menu menu = navigationView.getMenu();
-        MenuItem nav_login = menu.findItem(R.id.nav_login);
+        setLoginButtons(restManager.IsLoggedIn());
 
         if( useDrawerToggle()) { // use the hamburger menu
             drawerToggle = new ActionBarDrawerToggle(this, fullLayout, toolbar,
@@ -133,11 +166,16 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_logout:
-                LoginActivity_.intent(this).start();
+                logout();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Background
+    protected void logout(){
+        restManager.Logout();
     }
 
     @Override
@@ -147,5 +185,38 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        app.getBus().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        app.getBus().unregister(this);
+    }
+
+
+    @Subscribe
+    public void onUserLoggedInEvent(UserLoggedIn event) {
+        String message = String.format("zalogowano");
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+
+        setLoginButtons(true);
+    }
+
+    @Subscribe
+    public void onUserLoggedOutEvent(UserLoggedOut event) {
+        String message = String.format("wylogowano");
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+
+        setLoginButtons(false);
+
     }
 }

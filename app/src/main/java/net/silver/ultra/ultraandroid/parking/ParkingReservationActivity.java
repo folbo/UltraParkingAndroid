@@ -28,12 +28,6 @@ import java.util.UUID;
 @EActivity(R.layout.activity_parking_reservation)
 public class ParkingReservationActivity extends BaseActivity {
 
-    @App
-    MyApp app;
-
-    @Bean
-    RestManager restManager; 
-
     @ViewById(R.id.example)
     EditText exampleEditText;
 
@@ -74,18 +68,6 @@ public class ParkingReservationActivity extends BaseActivity {
             app.getBus().post(new ParkingReservedEvent(parkingPlace));
 
         finish();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        app.getBus().register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        app.getBus().unregister(this);
     }
 
     @Override

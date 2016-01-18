@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
 import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
 import net.silver.ultra.ultraandroid.parking.event.ParkingReservedEvent;
 import net.silver.ultra.ultraandroid.util.OttoBus;

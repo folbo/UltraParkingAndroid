@@ -1,6 +1,6 @@
 package net.silver.ultra.ultraandroid.parking.rest;
 
-import net.silver.ultra.ultraandroid.parking.model.GetAllParkingsReturns;
+import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
 import net.silver.ultra.ultraandroid.parking.model.ReserveParams;
 import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
 
@@ -25,7 +25,7 @@ public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHa
     ReserveReturns reserveParking(@Body ReserveParams parkingId);
 
     @Get("/parking/all")
-    GetAllParkingsReturns[] getAll();
+    ParkingModel[] getAll();
 
     @Get("/test/authtest")
     @RequiresCookie({".AspNet.ApplicationCookie"})

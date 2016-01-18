@@ -29,6 +29,7 @@ import net.silver.ultra.ultraandroid.AppPrefs;
 import net.silver.ultra.ultraandroid.AppPrefs_;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
 import net.silver.ultra.ultraandroid.BaseActivity;
+import net.silver.ultra.ultraandroid.BaseActivity_;
 import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
 import net.silver.ultra.ultraandroid.util.RestManager;
@@ -55,11 +56,6 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
 
-    @App
-    MyApp app;
-
-    @Bean
-    RestManager restManager;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -318,10 +314,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @Background
     public void login(String email,String password) {
-        restManager.getAuthenticationRest().login(new LoginParams(email, password));
+        restManager.Login(new LoginParams(email, password));
 
         String pass = restManager.getAuthenticationRest().testPass();
-        restManager.SaveAuthCookie();
 
         //String notPass = restManager.getAuthenticationRest().testNotPass();
         finish();

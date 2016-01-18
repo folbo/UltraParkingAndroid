@@ -6,7 +6,7 @@ import java.util.UUID;
 /**
  * Created by folbo on 2016-01-17.
  */
-public class GetAllParkingsReturns implements Serializable{
+public class ParkingModel implements Serializable{
     /*List<ParkingModel> parkings = new ArrayList<>();;
 
     public List<ParkingModel> getParkings() { return parkings; }

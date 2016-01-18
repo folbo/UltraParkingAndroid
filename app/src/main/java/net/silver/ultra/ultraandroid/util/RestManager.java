@@ -1,6 +1,10 @@
 package net.silver.ultra.ultraandroid.util;
 
 import net.silver.ultra.ultraandroid.AppPrefs_;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
+import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
+import net.silver.ultra.ultraandroid.Authentication.model.LoginResponse;
 import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
 import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
@@ -16,6 +20,8 @@ import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import retrofit2.http.Body;
+
 /**
  * Created by Sylwekqaz on 17.01.2016.
  */
@@ -24,13 +30,16 @@ public class RestManager {
     @StringRes(R.string.auth_cookie)
     String cookieName;
 
+    @App
+    MyApp app;
+
     @Pref
     AppPrefs_ prefs;
     @Bean
     ParkingServiceErrorHandler parkingServiceErrorHandler;
 
     @RestService
-    AuthenticationRest authenticationRest;
+    protected AuthenticationRest authenticationRest;
     @RestService
     ParkingRestService parkingRestService;
 
@@ -52,11 +61,25 @@ public class RestManager {
 
     public ParkingRestService getParkingRestService() { return parkingRestService; }
 
-
-
-    public void SaveAuthCookie() {
+    public void Login(LoginParams params) {
+        LoginResponse response = authenticationRest.login(params);
         String cookie = authenticationRest.getCookie(cookieName);
         prefs.edit().GetAuthCookieValue().put(cookie).apply();
         injectAuthCookie();
+
+        app.getBus().post(new UserLoggedIn(response.getUserId()));
     }
+
+    public void Logout() {
+        prefs.edit().GetAuthCookieValue().put("").apply();
+        injectAuthCookie();
+
+        app.getBus().post(new UserLoggedOut());
+    }
+
+    public boolean IsLoggedIn() {
+        return !prefs.GetAuthCookieValue().get().isEmpty();
+    }
+
+
 }

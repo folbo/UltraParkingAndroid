@@ -1,7 +1,6 @@
 package net.silver.ultra.ultraandroid;
 
 import android.location.Location;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -15,13 +14,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
-import net.silver.ultra.ultraandroid.parking.model.GetAllParkingsReturns;
-import net.silver.ultra.ultraandroid.util.RestManager;
+import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -36,17 +32,11 @@ import java.util.UUID;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    @App
-    MyApp app;
-
-    @Bean
-    RestManager restManager;
-
     @ViewById(R.id.fab) protected FloatingActionButton fab;
     protected GoogleMap map;
     protected Location myLocation;
-    protected List<ParkingModel> parkings = new ArrayList<>();
-    private HashMap<Marker, ParkingModel> MarkerParkingMap = new HashMap<Marker, ParkingModel>();
+    protected List<ParkingViewModel> parkings = new ArrayList<>();
+    private HashMap<Marker, ParkingViewModel> MarkerParkingMap = new HashMap<Marker, ParkingViewModel>();
 
     @AfterViews
     void initViews(){
@@ -86,15 +76,15 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     protected void getAllParkings(){
         parkings.clear();
 
-        GetAllParkingsReturns[] all = restManager.getParkingRestService().getAll();
+        ParkingModel[] all = restManager.getParkingRestService().getAll();
 
-        for(GetAllParkingsReturns parking : all){
-            ParkingModel marker = new ParkingModel();
-            marker.setParkingName(parking.getName());
-            marker.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
-            marker.setParkingId(parking.getId());
+        for(ParkingModel parking : all){
+            ParkingViewModel model = new ParkingViewModel();
+            model.setParkingName(parking.getName());
+            model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
+            model.setParkingId(parking.getId());
 
-            parkings.add(marker);
+            parkings.add(model);
         }
 
         updateMarkers();
@@ -103,7 +93,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     @UiThread
     protected void updateMarkers(){
         MarkerParkingMap.clear();
-        for(ParkingModel parking : parkings){
+        for(ParkingViewModel parking : parkings){
             Marker m = map.addMarker(parking.getMarkerOptions());
             MarkerParkingMap.put(m, parking);
         }
@@ -111,7 +101,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ParkingModel parking = MarkerParkingMap.get(marker);
+        ParkingViewModel parking = MarkerParkingMap.get(marker);
 
         ParkingReservationActivity_.intent(this)
                 .e_parkingId(parking.getParkingId())
@@ -121,7 +111,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 }
 
-class ParkingModel {
+class ParkingViewModel {
     UUID parkingId;
     String parkingName;
     MarkerOptions markerOptions;
