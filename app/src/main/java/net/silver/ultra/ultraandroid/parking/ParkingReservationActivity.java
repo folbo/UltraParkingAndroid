@@ -56,9 +56,14 @@ public class ParkingReservationActivity extends BaseActivity {
 
     @Background
     void updateParkingData(){
-        ParkingModel parking = restManager.getParkingRestService().getOne(e_parkingId.toString());
+        final ParkingModel parking = restManager.getParkingRestService().getOne(e_parkingId.toString());
 
-        freePlaces.setText(Integer.toString(parking.getFreePlacesCount()));
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                freePlaces.setText(Integer.toString(parking.getFreePlacesCount()));
+            }
+        });
     }
 
 
