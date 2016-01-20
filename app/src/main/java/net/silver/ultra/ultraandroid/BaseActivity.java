@@ -26,6 +26,7 @@ import com.squareup.otto.Subscribe;
 import net.silver.ultra.ultraandroid.Authentication.LoginActivity_;
 import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
 import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
+import net.silver.ultra.ultraandroid.transaction.TransactionListActivity_;
 import net.silver.ultra.ultraandroid.util.RestManager;
 
 import org.androidannotations.annotations.AfterInject;
@@ -160,7 +161,11 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         switch (id)
         {
             case R.id.nav_map:
-                //startActivity(new Intent(this, MainActivity.class));
+                MainActivity_.intent(this).start();
+                return true;
+
+            case R.id.nav_transactions:
+                TransactionListActivity_.intent(this).start();
                 return true;
 
             case R.id.nav_login:

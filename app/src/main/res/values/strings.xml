@@ -28,4 +28,5 @@
 
 
     <string name="pref_logged_in">preference_logged_in</string>
+    <string name="title_activity_transaction_list">TransactionListActivity</string>
 </resources>
