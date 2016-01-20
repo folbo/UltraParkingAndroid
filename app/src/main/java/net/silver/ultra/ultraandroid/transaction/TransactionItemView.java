@@ -5,6 +5,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.silver.ultra.ultraandroid.R;
+import net.silver.ultra.ultraandroid.transaction.model.TransactionModel;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -25,10 +26,10 @@ public class TransactionItemView extends LinearLayout {
         super(context);
     }
 
-    public void bind(TransactionBean transaction) {
-        parkingName.setText(transaction.parkingName);
-        dateStart.setText(transaction.dateStart);
-        dateEnd.setText(transaction.dateEnd);
-        money.setText(Float.toString(transaction.money));
+    public void bind(TransactionModel transaction) {
+        parkingName.setText(transaction.getParkingName());
+        dateStart.setText(transaction.getDateStart());
+        dateEnd.setText(transaction.getDateEnd());
+        money.setText(Float.toString(transaction.getMoney()));
     }
 }

@@ -7,8 +7,8 @@ import android.widget.BaseAdapter;
 
 import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.transaction.event.TransactionsDownloaded;
+import net.silver.ultra.ultraandroid.transaction.model.TransactionModel;
 
-import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -26,25 +26,24 @@ public class TransactionListAdapter extends BaseAdapter {
     @App
     MyApp app;
 
-    List<TransactionBean> transactions;
-
     @Bean
     TransactionLoader transactionLoader;
 
     @RootContext
     Context context;
 
+    private List<TransactionModel> transactions;
+
     @Background
     public void fetchTransactions() {
         transactions = transactionLoader.getAllTransactions();
         app.getBus().post(new TransactionsDownloaded());
-
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         TransactionItemView personItemView;
+
         if (convertView == null) {
             personItemView = TransactionItemView_.build(context);
         } else {
@@ -62,7 +61,7 @@ public class TransactionListAdapter extends BaseAdapter {
     }
 
     @Override
-    public TransactionBean getItem(int position) {
+    public TransactionModel getItem(int position) {
         return transactions.get(position);
     }
 
@@ -72,21 +71,3 @@ public class TransactionListAdapter extends BaseAdapter {
     }
 }
 
-class TransactionBean {
-    String dateStart;
-    String dateEnd;
-    String parkingName;
-    float money;
-
-    @Override
-    public String toString() {
-        return "";
-    }
-
-    public TransactionBean(String dateStart, String dateEnd, String parkingName, float money) {
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.parkingName = parkingName;
-        this.money = money;
-    }
-}
