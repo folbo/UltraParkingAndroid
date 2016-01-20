@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/transaction_parking_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="asd"
+        android:textSize="15sp" >
+    </TextView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transaction_date_start"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="hhh"
+    android:textSize="15sp" >
+    </TextView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transaction_date_end"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="ggg"
+    android:textSize="15sp" >
+    </TextView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transaction_money"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="ddd"
+    android:textSize="15sp" >
+    </TextView>
+
+</LinearLayout>

@@ -37,14 +37,17 @@
         <activity
             android:name=".Authentication.LoginActivity_"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+            
         <activity
             android:name=".parking.ParkingReservationActivity_"
             android:label="@string/title_activity_reserve_parkings"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+            
+        <activity
+            android:name=".transaction.TransactionListActivity_"
+            android:label="@string/title_activity_transaction_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
