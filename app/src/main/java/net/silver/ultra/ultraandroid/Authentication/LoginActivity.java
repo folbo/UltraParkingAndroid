@@ -328,9 +328,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             return;
         }
 
-        String pass = restManager.getAuthenticationRest().testPass();
-
-        //String notPass = restManager.getAuthenticationRest().testNotPass();
         finish();
     }
 
