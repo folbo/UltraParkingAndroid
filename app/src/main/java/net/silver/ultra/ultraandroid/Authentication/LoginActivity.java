@@ -314,7 +314,19 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @Background
     public void login(String email,String password) {
-        restManager.Login(new LoginParams(email, password));
+        //nie udało się zalogować z jakichkolwiek przyczyn
+        if(restManager.Login(new LoginParams(email, password)) == false)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showProgress(false);
+                    mEmailView.requestFocus();
+                }
+            });
+
+            return;
+        }
 
         String pass = restManager.getAuthenticationRest().testPass();
 

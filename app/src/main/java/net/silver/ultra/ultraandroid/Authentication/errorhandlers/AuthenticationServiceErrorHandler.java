@@ -1,4 +1,4 @@
-package net.silver.ultra.ultraandroid.parking.errorhandlers;
+package net.silver.ultra.ultraandroid.Authentication.errorhandlers;
 
 import android.os.Handler;
 import android.widget.Toast;
@@ -13,11 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 /**
- * Created by folbo on 2016-01-17.
+ * Created by folbo on 2016-01-20.
  */
-
 @EBean
-public class ParkingServiceErrorHandler implements RestErrorHandler {
+public class AuthenticationServiceErrorHandler implements RestErrorHandler {
     @App
     MyApp myApp;
 
@@ -28,12 +27,14 @@ public class ParkingServiceErrorHandler implements RestErrorHandler {
             HttpStatus statusCode = exception.getStatusCode();
 
             switch(statusCode.value()){
-                case 422:
-                    showToast("Brak wolnych miejsc");
+                case 400:
+                    showToast("Niepoprawny format");
                     break;
                 case 401:
                     showToast("Musisz się zalogować, aby skorzystać z tej funkcji");
                     break;
+                default:
+                    throw e;
             }
 
         }

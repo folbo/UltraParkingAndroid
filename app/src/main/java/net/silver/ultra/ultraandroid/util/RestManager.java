@@ -1,6 +1,10 @@
 package net.silver.ultra.ultraandroid.util;
 
+import android.os.Handler;
+import android.widget.Toast;
+
 import net.silver.ultra.ultraandroid.AppPrefs_;
+import net.silver.ultra.ultraandroid.Authentication.errorhandlers.AuthenticationServiceErrorHandler;
 import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
 import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
@@ -37,6 +41,8 @@ public class RestManager {
     AppPrefs_ prefs;
     @Bean
     ParkingServiceErrorHandler parkingServiceErrorHandler;
+    @Bean
+    AuthenticationServiceErrorHandler authServiceErrorHandler;
 
     @RestService
     protected AuthenticationRest authenticationRest;
@@ -46,6 +52,7 @@ public class RestManager {
     @AfterInject
     void init(){
         parkingRestService.setRestErrorHandler(parkingServiceErrorHandler);
+        authenticationRest.setRestErrorHandler(authServiceErrorHandler);
         injectAuthCookie();
     }
 
@@ -61,13 +68,33 @@ public class RestManager {
 
     public ParkingRestService getParkingRestService() { return parkingRestService; }
 
-    public void Login(LoginParams params) {
+    public boolean Login(LoginParams params) {
         LoginResponse response = authenticationRest.login(params);
+
+        //server error - wrong model
+        if(response == null) return false;
+
+        //wrong username or password
+        if(response.getStatus().equals("Failure")) {
+            Handler mainThreadHandler = new Handler(app.getMainLooper());
+            Runnable showMessage = new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(app, "Niepoprawny login/hasło", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            };
+            mainThreadHandler.post(showMessage);
+            return false;
+        }
+
         String cookie = authenticationRest.getCookie(cookieName);
         prefs.edit().GetAuthCookieValue().put(cookie).apply();
         injectAuthCookie();
 
         app.getBus().post(new UserLoggedIn(response.getUserId()));
+
+        return true;
     }
 
     public void Logout() {
