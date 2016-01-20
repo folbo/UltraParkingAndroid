@@ -78,6 +78,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         ParkingModel[] all = restManager.getParkingRestService().getAll();
 
+        if(all == null) return;
+
         for(ParkingModel parking : all){
             ParkingViewModel model = new ParkingViewModel();
             model.setParkingName(parking.getName());
