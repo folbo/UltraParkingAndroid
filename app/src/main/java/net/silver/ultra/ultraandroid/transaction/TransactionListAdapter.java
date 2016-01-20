@@ -23,53 +23,53 @@ import java.util.List;
 
 @EBean
 public class TransactionListAdapter extends BaseAdapter {
-        @App
-        MyApp app;
+    @App
+    MyApp app;
 
-        List<TransactionBean> transactions;
+    List<TransactionBean> transactions;
 
-        @Bean
-        TransactionLoader transactionLoader;
+    @Bean
+    TransactionLoader transactionLoader;
 
-        @RootContext
-        Context context;
+    @RootContext
+    Context context;
 
-        @Background
-        public void fetchTransactions() {
-            transactions = transactionLoader.getAllTransactions();
-            app.getBus().post(new TransactionsDownloaded());
+    @Background
+    public void fetchTransactions() {
+        transactions = transactionLoader.getAllTransactions();
+        app.getBus().post(new TransactionsDownloaded());
 
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        TransactionItemView personItemView;
+        if (convertView == null) {
+            personItemView = TransactionItemView_.build(context);
+        } else {
+            personItemView = (TransactionItemView) convertView;
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        personItemView.bind(getItem(position));
 
-            TransactionItemView personItemView;
-            if (convertView == null) {
-                personItemView = TransactionItemView_.build(context);
-            } else {
-                personItemView = (TransactionItemView) convertView;
-            }
+        return personItemView;
+    }
 
-            personItemView.bind(getItem(position));
+    @Override
+    public int getCount() {
+        return transactions.size();
+    }
 
-            return personItemView;
-        }
+    @Override
+    public TransactionBean getItem(int position) {
+        return transactions.get(position);
+    }
 
-        @Override
-        public int getCount() {
-            return transactions.size();
-        }
-
-        @Override
-        public TransactionBean getItem(int position) {
-            return transactions.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 }
 
 class TransactionBean {

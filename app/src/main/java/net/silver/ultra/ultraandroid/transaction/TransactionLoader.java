@@ -31,9 +31,7 @@ public class TransactionLoader {
         objects.add(new TransactionBean("parking", "26.2.5555", "27.3.5555", 5.06f));
         objects.add(new TransactionBean("parking", "26.2.5555", "27.3.5555", 5.06f));
 
-
         SystemClock.sleep(2000);
-
 
         return objects;
     }
