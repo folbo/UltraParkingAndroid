@@ -2,10 +2,7 @@ package net.silver.ultra.ultraandroid.Authentication.rest;
 
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginResponse;
-import net.silver.ultra.ultraandroid.MyApp;
-import net.silver.ultra.ultraandroid.R;
 
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.RequiresCookie;
@@ -19,7 +16,7 @@ import retrofit2.http.Body;
 
 
 /**
- * @author aturski
+ * Created by Sylwekqaz on 15.01.2016.
  */
 @Rest(rootUrl = "http://ultra.dev/api" ,converters = { MappingJackson2HttpMessageConverter.class })
 public interface AuthenticationRest extends RestClientRootUrl, RestClientErrorHandling  {

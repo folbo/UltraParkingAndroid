@@ -5,8 +5,6 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
-import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
-import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
 import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
 import net.silver.ultra.ultraandroid.parking.event.ParkingReservedEvent;
 import net.silver.ultra.ultraandroid.util.OttoBus;
@@ -20,6 +18,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 /**
  * Created by Sylwekqaz on 16.01.2016.
  */
+
 @EApplication
 public class MyApp extends Application {
 

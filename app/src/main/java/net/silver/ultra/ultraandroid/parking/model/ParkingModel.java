@@ -6,12 +6,8 @@ import java.util.UUID;
 /**
  * Created by folbo on 2016-01-17.
  */
+
 public class ParkingModel implements Serializable{
-    /*List<ParkingModel> parkings = new ArrayList<>();;
-
-    public List<ParkingModel> getParkings() { return parkings; }
-    public List<ParkingModel> setParkings(List<ParkingModel> parkings) { return this.parkings = parkings; }*/
-
     UUID id;
     String name;
     int totalPlacesCount;

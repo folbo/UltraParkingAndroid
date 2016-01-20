@@ -19,8 +19,9 @@ import retrofit2.http.Path;
 
 
 /**
- * @author aturski
+ * Created by Sylwekqaz on 15.01.2016.
  */
+
 @Rest(rootUrl = "http://ultra.dev/api",converters = {MappingJackson2HttpMessageConverter.class})
 public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHandling {
 

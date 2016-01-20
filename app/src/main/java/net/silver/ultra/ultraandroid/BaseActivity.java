@@ -1,13 +1,7 @@
 package net.silver.ultra.ultraandroid;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,15 +22,10 @@ import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
 import net.silver.ultra.ultraandroid.transaction.TransactionListActivity_;
 import net.silver.ultra.ultraandroid.util.RestManager;
 
-import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.w3c.dom.Text;
 
 @EActivity(R.layout.activity_base)
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

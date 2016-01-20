@@ -5,6 +5,7 @@ import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
 /**
  * Created by Sylwekqaz on 16.01.2016.
  */
+
 public class ParkingReservedEvent {
     private ReserveReturns reservedPlace;
 
