@@ -17,6 +17,7 @@ public class ParkingModel implements Serializable{
     int totalPlacesCount;
     int freePlacesCount;
     UUID ownerId;
+    String ownerName;
     double locationLatitude;
     double locationLongitude;
 
@@ -41,4 +42,12 @@ public class ParkingModel implements Serializable{
 
     public double setLocationLongitude(double locationLongitude){ return this.locationLongitude = locationLongitude; }
     public double getLocationLongitude(){ return this.locationLongitude; }
+
+    public String setOwnerName(String ownerName) {
+        return this.ownerName = ownerName;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
 }

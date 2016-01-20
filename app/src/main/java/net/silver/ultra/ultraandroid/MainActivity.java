@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         for(ParkingModel parking : all){
             ParkingViewModel model = new ParkingViewModel();
             model.setParkingName(parking.getName());
-            model.setOwnerName(parking.getOwnerId().toString());
+            model.setOwnerName(parking.getOwnerName());
             model.setFreePlaces(parking.getFreePlacesCount());
             model.setTotalPlaces(parking.getTotalPlacesCount());
             model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
