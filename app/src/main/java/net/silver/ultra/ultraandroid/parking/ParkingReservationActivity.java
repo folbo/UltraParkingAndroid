@@ -72,7 +72,7 @@ public class ParkingReservationActivity extends BaseActivity {
 
     @Background
     void test(){
-        restManager.getParkingRestService().testPass();
+        //restManager.getParkingRestService().testPass();
     }
 
 

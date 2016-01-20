@@ -25,6 +25,7 @@ import retrofit2.http.Path;
 public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHandling {
 
     @Post("/parking/bookPlace")
+    @RequiresCookie({".AspNet.ApplicationCookie"})
     ReserveReturns reserveParking(@Body ReserveParams parkingId);
 
     @Get("/parking/all")
@@ -32,10 +33,6 @@ public interface ParkingRestService extends RestClientRootUrl, RestClientErrorHa
 
     @Get("/parking/{id}")
     ParkingModel getOne(@Path("id") String id);
-
-    @Get("/test/authtest")
-    @RequiresCookie({".AspNet.ApplicationCookie"})
-    String testPass();
 
     void setCookie(String name, String value);
 }
