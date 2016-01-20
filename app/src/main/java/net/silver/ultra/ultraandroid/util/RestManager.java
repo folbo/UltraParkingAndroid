@@ -90,15 +90,17 @@ public class RestManager {
 
         String cookie = authenticationRest.getCookie(cookieName);
         prefs.edit().GetAuthCookieValue().put(cookie).apply();
+        prefs.edit().GetUserEmail().put(params.getEmail()).apply();
         injectAuthCookie();
 
-        app.getBus().post(new UserLoggedIn(response.getUserId()));
+        app.getBus().post(new UserLoggedIn(response.getUserId(), params.getEmail()));
 
         return true;
     }
 
     public void Logout() {
         prefs.edit().GetAuthCookieValue().put("").apply();
+        prefs.edit().GetUserEmail().put("Niezalogowany").apply();
         injectAuthCookie();
 
         app.getBus().post(new UserLoggedOut());

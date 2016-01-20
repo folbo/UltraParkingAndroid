@@ -15,12 +15,16 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.rest.RestService;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 /**
  * Created by Sylwekqaz on 16.01.2016.
  */
 @EApplication
 public class MyApp extends Application {
+
+    @Pref
+    public AppPrefs_ prefs;
 
     @Bean
     OttoBus bus;

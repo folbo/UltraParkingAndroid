@@ -17,4 +17,5 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 public interface AppPrefs {
 
     String GetAuthCookieValue();
+    String GetUserEmail();
 }

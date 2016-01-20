@@ -7,14 +7,20 @@ import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
  */
 public class UserLoggedIn {
     private String userId;
+    private String userEmail;
 
     public String getUserId() {
         return userId;
     }
 
-    public UserLoggedIn(String userId) {
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public UserLoggedIn(String userId, String userEmail) {
 
         this.userId = userId;
+        this.userEmail = userEmail;
     }
 }
 

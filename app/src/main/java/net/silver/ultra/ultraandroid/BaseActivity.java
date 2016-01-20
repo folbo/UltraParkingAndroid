@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,16 +34,15 @@ import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.w3c.dom.Text;
 
 @EActivity(R.layout.activity_base)
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @App
     protected MyApp app;
-
-    @Pref
-    protected AppPrefs_ prefs;
 
     @Bean
     protected RestManager restManager;
@@ -53,6 +53,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private int selectedNavItemId;
 
+    private TextView appStatusEmail;
 
     @Override
     public void setContentView(int layoutResID)
@@ -75,6 +76,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
+        appStatusEmail = (TextView) navigationView.getHeaderView(selectedNavItemId).findViewById(R.id.app_status_email);
 
         if (useToolbar())
         {
@@ -113,6 +115,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         setLoginButtons(restManager.IsLoggedIn());
+        appStatusEmail.setText(app.prefs.GetUserEmail().getOr("Niezalogowany"));
 
         if( useDrawerToggle()) { // use the hamburger menu
             drawerToggle = new ActionBarDrawerToggle(this, fullLayout, toolbar,
@@ -200,13 +203,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         app.getBus().unregister(this);
     }
 
-
     @Subscribe
     public void onUserLoggedInEvent(UserLoggedIn event) {
         String message = String.format("zalogowano");
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
 
+
+        appStatusEmail.setText(event.getUserEmail());
         setLoginButtons(true);
     }
 
@@ -216,7 +220,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
 
+        String email = app.prefs.GetUserEmail().get();
+        appStatusEmail.setText(email);
         setLoginButtons(false);
-
     }
 }
