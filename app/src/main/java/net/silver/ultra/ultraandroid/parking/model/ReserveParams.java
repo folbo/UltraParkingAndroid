@@ -6,6 +6,7 @@ import java.util.UUID;
 /**
  * Created by Sylwekqaz on 17.01.2016.
  */
+
 public class ReserveParams implements Serializable {
     private UUID parkingId;
 

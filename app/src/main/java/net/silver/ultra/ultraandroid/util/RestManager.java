@@ -20,15 +20,13 @@ import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.res.StringRes;
-import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-
-import retrofit2.http.Body;
 
 /**
  * Created by Sylwekqaz on 17.01.2016.
  */
+
 @EBean(scope = EBean.Scope.Singleton)
 public class RestManager {
     @StringRes(R.string.auth_cookie)

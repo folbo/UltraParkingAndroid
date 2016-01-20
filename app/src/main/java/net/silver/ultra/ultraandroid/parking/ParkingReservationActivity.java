@@ -1,24 +1,17 @@
 package net.silver.ultra.ultraandroid.parking;
 
-import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import net.silver.ultra.ultraandroid.BaseActivity;
-import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
 import net.silver.ultra.ultraandroid.parking.event.ParkingReservedEvent;
 import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
 import net.silver.ultra.ultraandroid.parking.model.ReserveParams;
 import net.silver.ultra.ultraandroid.parking.model.ReserveReturns;
-import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
-import net.silver.ultra.ultraandroid.util.RestManager;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;

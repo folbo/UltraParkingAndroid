@@ -29,15 +29,10 @@ import net.silver.ultra.ultraandroid.AppPrefs;
 import net.silver.ultra.ultraandroid.AppPrefs_;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
 import net.silver.ultra.ultraandroid.BaseActivity;
-import net.silver.ultra.ultraandroid.BaseActivity_;
-import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
-import net.silver.ultra.ultraandroid.util.RestManager;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -49,9 +44,6 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-/**
- * A login screen that offers login via email/password.
- */
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
@@ -61,7 +53,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    // UI references.
     @ViewById(R.id.email) protected AutoCompleteTextView mEmailView;
     @ViewById(R.id.password) protected EditText mPasswordView;
     @ViewById(R.id.login_progress) protected View mProgressView;
@@ -148,9 +139,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         return false;
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -161,18 +149,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
-        // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
         final String email = mEmailView.getText().toString();
         final String password = mPasswordView.getText().toString();
 
@@ -194,118 +174,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
-
-
             login(email,password);
-
-
-//            Api api = new Api();
-//            api.setGiveMeUserRequest(new Callable<LoginRequest>() {
-//                @Override
-//                public LoginRequest call() throws Exception {
-//                    return new LoginRequest(email, password);
-//                }
-//            });
-//
-//            LoginResponse result = null;
-//
-//            api.call(api.userService.login(new LoginRequest(email, password)), new myAwesomeCallback<LoginResponse>() {
-//                @Override
-//                public void onSuccess(LoginResponse response) {
-//                    new AlertDialog.Builder(LoginActivity.this)
-//                            .setTitle("ok")
-//                            .setMessage("ok")
-//                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    mEmailView.requestFocus();
-//                                }
-//                            })
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .show();
-//                }
-//
-//                @Override
-//                public void onError(ApiError apiError) {
-//                    new AlertDialog.Builder(LoginActivity.this)
-//                            .setTitle("Can't login")
-//                            .setMessage("Login or password is incorrect.")
-//                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    mEmailView.requestFocus();
-//                                }
-//                            })
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .show();
-//                }
-//            });
-/*
-            Call<LoginResponse> call = api.userService.login(new LoginRequest(email, password));
-            call.enqueue(new Callback<LoginResponse>() {
-                             @Override
-                             public void onResponse(Response<LoginResponse> response) {
-                                 if (response.isSuccess()) {
-                                     // request successful (status code 200, 201)
-                                     LoginResponse result = response.body();
-
-                                     if (result.userId != null) {
-                                         //logged in
-
-                                         appSettings.setLogin(true);
-                                         finish();
-                                     } else {
-                                         // no such user
-                                         showProgress(false);
-                                         new AlertDialog.Builder(LoginActivity.this)
-                                                 .setTitle("Can't login")
-                                                 .setMessage("Login or password is incorrect.")
-                                                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                     public void onClick(DialogInterface dialog, int which) {
-                                                         mEmailView.requestFocus();
-                                                     }
-                                                 })
-                                                 .setIcon(android.R.drawable.ic_dialog_alert)
-                                                 .show();
-                                     }
-
-                                 } else {
-                                     // response received but request not successful (like 400,401,403 etc)
-                                     // model is invalid
-                                     showProgress(false);
-                                     new AlertDialog.Builder(LoginActivity.this)
-                                             .setTitle("Can't login")
-                                             .setMessage("Login or password is incorrect.")
-                                             .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                 public void onClick(DialogInterface dialog, int which) {
-                                                     mEmailView.requestFocus();
-                                                 }
-                                             })
-                                             .setIcon(android.R.drawable.ic_dialog_alert)
-                                             .show();
-                                 }
-                             }
-
-                             @Override
-                             public void onFailure(Throwable t) {
-                                 new AlertDialog.Builder(LoginActivity.this)
-                                         .setTitle("Connection error")
-                                         .setMessage(t.getMessage())
-                                         .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                             public void onClick(DialogInterface dialog, int which) {
-                                                 LoginActivity.this.finish();
-                                             }
-                                         })
-                                         .setIcon(android.R.drawable.ic_dialog_alert)
-                                         .show();
-                             }
-                         }
-            );*/
         }
     }
 
@@ -331,10 +203,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         finish();
     }
 
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
