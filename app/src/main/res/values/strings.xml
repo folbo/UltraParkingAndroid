@@ -1,13 +1,16 @@
 <resources>
-    <string name="app_name">UltraAndroid</string>
+    <string name="app_name">UltraParking</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_reserve_parkings">Rezerwacja miejsca</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="nav_drawer_opened">drawer opened</string>
+    <string name="nav_drawer_closed">drawer closed</string>
+
+    <string name="auth_cookie">.AspNet.ApplicationCookie</string>
 
     <!-- Strings related to login -->
-    <string name="auth_cookie">.AspNet.ApplicationCookie</string>
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -20,12 +23,4 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_base">BaseActivity</string>
-    <string name="nav_drawer_opened">drawer opened</string>
-    <string name="nav_drawer_closed">drawer closed</string>
-
-    <string name="title_activity_login">LoginActivity</string>
-
-
-    <string name="pref_logged_in">preference_logged_in</string>
 </resources>

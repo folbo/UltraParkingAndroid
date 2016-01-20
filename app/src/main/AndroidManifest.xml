@@ -18,9 +18,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity_"
             android:label="@string/app_name"
@@ -31,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Authentication.LoginActivity_"
             android:label="@string/title_activity_login"
@@ -38,7 +41,7 @@
 
         <activity
             android:name=".parking.ParkingReservationActivity_"
-            android:label="@string/prompt_password"
+            android:label="@string/title_activity_reserve_parkings"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
