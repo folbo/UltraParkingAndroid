@@ -19,8 +19,6 @@ import java.util.List;
 
 @EBean
 public class TransactionLoader {
-    @App
-    MyApp app;
 
     @SupposeBackground
     public List<TransactionBean> getAllTransactions(){
@@ -36,7 +34,6 @@ public class TransactionLoader {
 
         SystemClock.sleep(2000);
 
-        app.getBus().post(new TransactionsDownloaded());
 
         return objects;
     }

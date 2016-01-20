@@ -5,7 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import net.silver.ultra.ultraandroid.MyApp;
+import net.silver.ultra.ultraandroid.transaction.event.TransactionsDownloaded;
+
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -19,6 +23,8 @@ import java.util.List;
 
 @EBean
 public class TransactionListAdapter extends BaseAdapter {
+        @App
+        MyApp app;
 
         List<TransactionBean> transactions;
 
@@ -31,6 +37,8 @@ public class TransactionListAdapter extends BaseAdapter {
         @Background
         public void fetchTransactions() {
             transactions = transactionLoader.getAllTransactions();
+            app.getBus().post(new TransactionsDownloaded());
+
         }
 
         @Override
