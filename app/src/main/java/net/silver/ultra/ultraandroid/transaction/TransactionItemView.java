@@ -28,8 +28,8 @@ public class TransactionItemView extends LinearLayout {
 
     public void bind(TransactionModel transaction) {
         parkingName.setText(transaction.getParkingName());
-        dateStart.setText(transaction.getDateStart());
-        dateEnd.setText(transaction.getDateEnd());
-        money.setText(Float.toString(transaction.getMoney()));
+        dateStart.setText(transaction.getStartTime());
+        dateEnd.setText(transaction.getEndTime());
+        money.setText(Float.toString(transaction.getPrice()));
     }
 }

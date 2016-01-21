@@ -3,9 +3,12 @@ package net.silver.ultra.ultraandroid.transaction;
 import android.os.SystemClock;
 
 import net.silver.ultra.ultraandroid.transaction.model.TransactionModel;
+import net.silver.ultra.ultraandroid.util.RestManager;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.SupposeBackground;
+import org.androidannotations.annotations.rest.RestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +19,17 @@ import java.util.List;
 
 @EBean
 public class TransactionLoader {
+    @Bean
+    RestManager restManager;
 
     @SupposeBackground
     public List<TransactionModel> getAllTransactions(){
         List<TransactionModel> objects = new ArrayList<>();
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
-        objects.add(new TransactionModel("parking", "26.2.5555", "27.3.5555", 5.06f));
+        TransactionModel[] model = restManager.getTransactionRestService().getAll();
 
-        SystemClock.sleep(2000);
+        for(int i = 0; i < model.length; i++){
+            objects.add(model[i]);
+        }
 
         return objects;
     }

@@ -1,36 +1,36 @@
 package net.silver.ultra.ultraandroid.transaction.model;
 
 public class TransactionModel {
-    String dateStart;
-    String dateEnd;
+    String startTime;
+    String endTime;
     String parkingName;
-    float money;
+    float price;
 
     @Override
     public String toString() {
         return "";
     }
 
-    public TransactionModel(String dateStart, String dateEnd, String parkingName, float money) {
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public TransactionModel(String startTime, String endTime, String parkingName, float price) {
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.parkingName = parkingName;
-        this.money = money;
+        this.price = price;
     }
 
     public String getParkingName() {
         return parkingName;
     }
 
-    public float getMoney() {
-        return money;
+    public float getPrice() {
+        return price;
     }
 
-    public String getDateEnd() {
-        return dateEnd;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public String getDateStart() {
-        return dateStart;
+    public String getStartTime() {
+        return startTime;
     }
 }
