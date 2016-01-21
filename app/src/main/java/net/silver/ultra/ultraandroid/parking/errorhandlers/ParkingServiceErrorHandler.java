@@ -11,6 +11,7 @@ import org.androidannotations.api.rest.RestErrorHandler;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 /**
  * Created by folbo on 2016-01-17.
@@ -35,7 +36,17 @@ public class ParkingServiceErrorHandler implements RestErrorHandler {
                     showToast("Musisz się zalogować, aby skorzystać z tej funkcji");
                     break;
             }
+        }
+        else if(e instanceof HttpServerErrorException)
+        {
+            HttpServerErrorException exception = (HttpServerErrorException) e;
+            HttpStatus statusCode = exception.getStatusCode();
 
+            switch(statusCode.value()){
+                case 500:
+                    showToast("Już masz zarezerwowane miejsce. ");
+                    break;
+            }
         }
     }
 
