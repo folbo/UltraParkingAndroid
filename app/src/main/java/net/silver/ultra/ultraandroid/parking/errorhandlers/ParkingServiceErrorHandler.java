@@ -44,7 +44,7 @@ public class ParkingServiceErrorHandler implements RestErrorHandler {
 
             switch(statusCode.value()){
                 case 500:
-                    showToast("Już masz zarezerwowane miejsce. ");
+                    showToast("Doładuj konto lub zwolnij rezerwację.");
                     break;
             }
         }
