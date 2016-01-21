@@ -1,5 +1,6 @@
 package net.silver.ultra.ultraandroid.parking;
 
+import android.content.Intent;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -73,8 +74,12 @@ public class ParkingReservationActivity extends BaseActivity {
     void reserveParking(final UUID createRequest) {
         ReserveReturns parkingPlace = restManager.getParkingRestService().reserveParking(new ReserveParams(createRequest));
 
-        if(parkingPlace != null)
+        if(parkingPlace != null) {
             app.getBus().post(new ParkingReservedEvent(parkingPlace));
+            Intent intent = new Intent();
+            intent.putExtra("reservedParkingId",createRequest.toString());
+            setResult(RESULT_OK, intent);
+        }
 
         finish();
     }

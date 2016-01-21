@@ -3,6 +3,7 @@ package net.silver.ultra.ultraandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +26,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.squareup.otto.Subscribe;
 
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedIn;
+import net.silver.ultra.ultraandroid.Authentication.event.UserLoggedOut;
 import net.silver.ultra.ultraandroid.Authentication.model.StatusResponse;
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
 import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
@@ -219,7 +224,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         removePolyline();
 
         ParkingModel[] all = restManager.getParkingRestService().getAll();
-        StatusResponse status = restManager.getAuthenticationRest().getStatus();
+        StatusResponse status = null;
+        if(restManager.IsLoggedIn())
+             status = restManager.getAuthenticationRest().getStatus();
 
         if(all == null) return;
 
@@ -230,7 +237,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             model.setFreePlaces(parking.getFreePlacesCount());
             model.setTotalPlaces(parking.getTotalPlacesCount());
             model.setParkingId(parking.getId());
-            if(status.getReserverParkingId() != null && status.getReserverParkingId().equals(model.getParkingId())) {
+            if(restManager.IsLoggedIn() && status.getReserverParkingId() != null && status.getReserverParkingId().equals(model.getParkingId())) {
                 model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
             else
@@ -273,7 +280,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 .e_parkingName(parking.getParkingName())
                 .e_parkingFreePlaces(parking.getFreePlaces())
                 .e_parkingOwnerName(parking.getOwnerName())
-                .start();
+                .startForResult(1);
 
         removePolyline();
 
@@ -351,6 +358,31 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
             mapView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                for(Marker m : MarkerParkingMap.keySet()) {
+                    String mid = MarkerParkingMap.get(m).getParkingId().toString();
+                    String rid = data.getStringExtra("reservedParkingId");
+                    if(mid.equals(rid))
+                        m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void onUserLoggedOutEvent(UserLoggedOut event) {
+        getAllParkings();
+    }
+
+    @Subscribe
+    public void onUserLoggedInEvent(UserLoggedIn event) {
+        getAllParkings();
     }
 
     class ParkingViewModel {
