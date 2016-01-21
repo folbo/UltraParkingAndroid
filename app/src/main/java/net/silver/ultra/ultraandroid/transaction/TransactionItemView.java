@@ -19,7 +19,6 @@ public class TransactionItemView extends LinearLayout {
 
     @ViewById(R.id.transaction_parking_name) TextView parkingName;
     @ViewById(R.id.transaction_date_start) TextView dateStart;
-    @ViewById(R.id.transaction_date_end) TextView dateEnd;
     @ViewById(R.id.transaction_money) TextView money;
 
     public TransactionItemView(Context context) {
@@ -29,7 +28,6 @@ public class TransactionItemView extends LinearLayout {
     public void bind(TransactionModel transaction) {
         parkingName.setText(transaction.getParkingName());
         dateStart.setText(transaction.getStartTime());
-        dateEnd.setText(transaction.getEndTime());
         money.setText(Float.toString(transaction.getPrice()));
     }
 }
