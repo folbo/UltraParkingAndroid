@@ -89,21 +89,23 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void setLoginButtons(boolean loggedIn)
+    private void setMenuButtons(boolean loggedIn)
     {
         Menu menu = navigationView.getMenu();
         MenuItem nav_login = menu.findItem(R.id.nav_login);
         MenuItem nav_logout = menu.findItem(R.id.nav_logout);
+        MenuItem nav_history = menu.findItem(R.id.nav_transactions);
 
-            nav_login.setVisible(!loggedIn);
-            nav_logout.setVisible(loggedIn);
+        nav_login.setVisible(!loggedIn);
+        nav_logout.setVisible(loggedIn);
+        nav_history.setVisible(loggedIn);
     }
 
     protected void setUpNavView()
     {
         navigationView.setNavigationItemSelectedListener(this);
 
-        setLoginButtons(restManager.IsLoggedIn());
+        setMenuButtons(restManager.IsLoggedIn());
         appStatusEmail.setText(app.prefs.GetUserEmail().getOr("Niezalogowany"));
 
         if( useDrawerToggle()) { // use the hamburger menu
@@ -204,7 +206,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
 
         appStatusEmail.setText(event.getUserEmail());
-        setLoginButtons(true);
+        setMenuButtons(true);
     }
 
     @Subscribe
@@ -215,6 +217,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         String email = app.prefs.GetUserEmail().get();
         appStatusEmail.setText(email);
-        setLoginButtons(false);
+        setMenuButtons(false);
     }
 }

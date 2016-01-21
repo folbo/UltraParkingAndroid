@@ -5,6 +5,8 @@ import net.silver.ultra.ultraandroid.transaction.model.TransactionModel;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.api.rest.RestClientErrorHandling;
+import org.androidannotations.api.rest.RestClientRootUrl;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
@@ -12,7 +14,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 
 @Rest(rootUrl = "http://ultra.dev/api",converters = {MappingJackson2HttpMessageConverter.class})
-public interface TransactionRestService {
+public interface TransactionRestService extends RestClientRootUrl, RestClientErrorHandling {
 
     @Get("/transactions/all")
     @RequiresCookie({".AspNet.ApplicationCookie"})

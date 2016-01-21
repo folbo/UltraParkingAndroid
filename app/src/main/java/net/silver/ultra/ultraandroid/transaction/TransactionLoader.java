@@ -2,9 +2,11 @@ package net.silver.ultra.ultraandroid.transaction;
 
 import android.os.SystemClock;
 
+import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.transaction.model.TransactionModel;
 import net.silver.ultra.ultraandroid.util.RestManager;
 
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.SupposeBackground;
@@ -19,6 +21,9 @@ import java.util.List;
 
 @EBean
 public class TransactionLoader {
+    @App
+    MyApp app;
+
     @Bean
     RestManager restManager;
 
@@ -27,10 +32,11 @@ public class TransactionLoader {
         List<TransactionModel> objects = new ArrayList<>();
         TransactionModel[] model = restManager.getTransactionRestService().getAll();
 
-        for(int i = 0; i < model.length; i++){
-            objects.add(model[i]);
-        }
-
+        if(model != null)
+            for(int i = 0; i < model.length; i++){
+                objects.add(model[i]);
+            }
+        
         return objects;
     }
 }

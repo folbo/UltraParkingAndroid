@@ -15,6 +15,7 @@ import net.silver.ultra.ultraandroid.R;
 import net.silver.ultra.ultraandroid.googledirections.GoogleDirectionsRestService;
 import net.silver.ultra.ultraandroid.parking.errorhandlers.ParkingServiceErrorHandler;
 import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
+import net.silver.ultra.ultraandroid.transaction.errorhandlers.TransactionServiceErrorHandler;
 import net.silver.ultra.ultraandroid.transaction.rest.TransactionRestService;
 
 import org.androidannotations.annotations.AfterInject;
@@ -43,6 +44,8 @@ public class RestManager {
     ParkingServiceErrorHandler parkingServiceErrorHandler;
     @Bean
     AuthenticationServiceErrorHandler authServiceErrorHandler;
+    @Bean
+    TransactionServiceErrorHandler transactionServiceErrorHandler;
 
     @RestService
     protected AuthenticationRest authenticationRest;
@@ -57,6 +60,7 @@ public class RestManager {
     void init(){
         parkingRestService.setRestErrorHandler(parkingServiceErrorHandler);
         authenticationRest.setRestErrorHandler(authServiceErrorHandler);
+        transactionRestService.setRestErrorHandler(transactionServiceErrorHandler);
 
         injectAuthCookie();
     }
