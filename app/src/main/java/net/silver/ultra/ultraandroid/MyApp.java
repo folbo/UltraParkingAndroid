@@ -28,9 +28,6 @@ public class MyApp extends Application {
     @Bean
     OttoBus bus;
 
-    @RestService
-    AuthenticationRest authenticationRest;
-
     @AfterInject
     void init(){
         bus.register(this);

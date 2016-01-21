@@ -345,57 +345,58 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             mapView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+    class ParkingViewModel {
+        UUID parkingId;
+        String parkingName;
+        int freePlaces;
+        int totalPlaces;
+        String ownerName;
+
+        MarkerOptions markerOptions;
+
+        // getters & setters
+        public UUID getParkingId() {
+            return parkingId;
+        }
+        public UUID setParkingId(UUID parkingId) {
+            return this.parkingId = parkingId;
+        }
+
+        public MarkerOptions getMarkerOptions() {
+            return markerOptions;
+        }
+        public MarkerOptions setMarkerOptions(MarkerOptions markerOptions) {
+            return this.markerOptions = markerOptions;
+        }
+
+        public String getParkingName() {
+            return parkingName;
+        }
+        public String setParkingName(String parkingName) {
+            return this.parkingName = parkingName;
+        }
+
+        public int getFreePlaces() {
+            return freePlaces;
+        }
+        public int setFreePlaces(int freePlaces) {
+            return this.freePlaces = freePlaces;
+        }
+
+        public int getTotalPlaces() {
+            return totalPlaces;
+        }
+        public int setTotalPlaces(int totalPlaces) {
+            return this.totalPlaces = totalPlaces;
+        }
+
+        public String getOwnerName() {
+            return ownerName;
+        }
+        public String setOwnerName(String ownerName) {
+            return this.ownerName = ownerName;
+        }
+    }
 }
 
-class ParkingViewModel {
-    UUID parkingId;
-    String parkingName;
-    int freePlaces;
-    int totalPlaces;
-    String ownerName;
-
-    MarkerOptions markerOptions;
-
-    // getters & setters
-    public UUID getParkingId() {
-        return parkingId;
-    }
-    public UUID setParkingId(UUID parkingId) {
-        return this.parkingId = parkingId;
-    }
-
-    public MarkerOptions getMarkerOptions() {
-        return markerOptions;
-    }
-    public MarkerOptions setMarkerOptions(MarkerOptions markerOptions) {
-        return this.markerOptions = markerOptions;
-    }
-
-    public String getParkingName() {
-        return parkingName;
-    }
-    public String setParkingName(String parkingName) {
-        return this.parkingName = parkingName;
-    }
-
-    public int getFreePlaces() {
-        return freePlaces;
-    }
-    public int setFreePlaces(int freePlaces) {
-        return this.freePlaces = freePlaces;
-    }
-
-    public int getTotalPlaces() {
-        return totalPlaces;
-    }
-    public int setTotalPlaces(int totalPlaces) {
-        return this.totalPlaces = totalPlaces;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-    public String setOwnerName(String ownerName) {
-        return this.ownerName = ownerName;
-    }
-}

@@ -101,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         nav_history.setVisible(loggedIn);
     }
 
-    protected void setUpNavView()
+    private void setUpNavView()
     {
         navigationView.setNavigationItemSelectedListener(this);
 
