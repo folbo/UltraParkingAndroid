@@ -36,7 +36,7 @@ public class TransactionLoader {
             for(int i = 0; i < model.length; i++){
                 objects.add(model[i]);
             }
-        
+
         return objects;
     }
 }

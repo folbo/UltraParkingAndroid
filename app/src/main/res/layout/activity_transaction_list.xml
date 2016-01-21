@@ -7,21 +7,33 @@
     android:fitsSystemWindows="true"
     tools:context="net.silver.ultra.ultraandroid.transaction.TransactionListActivity">
 
-    <ProgressBar
-        android:id="@+id/load_transactions_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <ListView
-            android:id="@+id/transaction_list_view"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/load_transactions_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" >
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
-        </ListView>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/transaction_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+    </ListView>
 
 </android.support.design.widget.CoordinatorLayout>

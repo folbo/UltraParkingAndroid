@@ -140,6 +140,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         return onOptionsItemSelected(menuItem);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

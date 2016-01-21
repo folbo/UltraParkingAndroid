@@ -1,10 +1,17 @@
 package net.silver.ultra.ultraandroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +46,9 @@ import java.util.UUID;
 public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     @ViewById(R.id.fab) protected FloatingActionButton fab;
+    @ViewById(R.id.parking_fetch_progress) View progressBar;
+    @ViewById(R.id.map_view) View mapView;
+
     protected GoogleMap map;
     protected Location myLocation;
     protected List<ParkingViewModel> parkings = new ArrayList<>();
@@ -186,6 +196,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @Background
     protected void getAllParkings(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(true);
+            }
+        });
+
         parkings.clear();
 
         ParkingModel[] all = restManager.getParkingRestService().getAll();
@@ -205,11 +222,24 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         }
 
         updateMarkers();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(false);
+            }
+        });
     }
 
     @UiThread
     protected void updateMarkers(){
+        for(Marker m : MarkerParkingMap.keySet())
+        {
+            m.remove();
+        }
+
         MarkerParkingMap.clear();
+
         for(ParkingViewModel parking : parkings){
             Marker m = map.addMarker(parking.getMarkerOptions());
             MarkerParkingMap.put(m, parking);
@@ -245,6 +275,50 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         int meterConversion = 1609;
 
         return new Double(dist * meterConversion).doubleValue();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_map:
+                getAllParkings();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mapView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mapView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mapView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressBar.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            mapView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 }
 
