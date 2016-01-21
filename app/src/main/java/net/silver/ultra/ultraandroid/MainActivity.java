@@ -17,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -53,6 +54,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     protected Location myLocation;
     protected List<ParkingViewModel> parkings = new ArrayList<>();
     private HashMap<Marker, ParkingViewModel> MarkerParkingMap = new HashMap<Marker, ParkingViewModel>();
+
+    Marker nearestMarker;
     private double nearestParkingLongitude;
     private double nearestParkingLatitude;
     Polyline routePolyline;
@@ -74,9 +77,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         if(myLocation == null) return;
         if(parkings == null) return;
 
+        nearestMarker = null;
+
         double min = 10000;
         for(Marker m : MarkerParkingMap.keySet())
         {
+            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             if(MarkerParkingMap.get(m).getFreePlaces() == 0) continue;
 
             double dist = distFrom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), m.getPosition());
@@ -84,11 +90,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 nearestParkingLatitude = m.getPosition().latitude;
                 nearestParkingLongitude = m.getPosition().longitude;
 
+                nearestMarker = m;
+
                 min = dist;
             }
         }
 
-        if(nearestParkingLatitude != 0 && nearestParkingLongitude != 0) {
+        if(nearestMarker != null) {
+            nearestMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             testDirections();
         }
     }
@@ -205,6 +214,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         parkings.clear();
 
+        removePolyline();
+
         ParkingModel[] all = restManager.getParkingRestService().getAll();
 
         if(all == null) return;
@@ -256,7 +267,21 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 .e_parkingFreePlaces(parking.getFreePlaces())
                 .e_parkingOwnerName(parking.getOwnerName())
                 .start();
+
+        removePolyline();
+
         return true;
+    }
+
+    private void removePolyline(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (routePolyline != null)
+                    routePolyline.remove();
+
+            }
+        });
     }
 
     public double distFrom (LatLng loc1, LatLng loc2 )
