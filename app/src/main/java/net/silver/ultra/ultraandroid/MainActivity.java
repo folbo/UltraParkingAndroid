@@ -376,12 +376,26 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     @Subscribe
-    public void onUserLoggedOutEvent(UserLoggedOut event) {
+    public void onUserLoggedInEvent(UserLoggedIn event) {
+        String message = String.format("zalogowano");
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+
+
+        appStatusEmail.setText(event.getUserEmail());
+        setMenuButtons(true);
         getAllParkings();
     }
 
     @Subscribe
-    public void onUserLoggedInEvent(UserLoggedIn event) {
+    public void onUserLoggedOutEvent(UserLoggedOut event) {
+        String message = String.format("wylogowano");
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+
+        String email = app.prefs.GetUserEmail().get();
+        appStatusEmail.setText(email);
+        setMenuButtons(false);
         getAllParkings();
     }
 

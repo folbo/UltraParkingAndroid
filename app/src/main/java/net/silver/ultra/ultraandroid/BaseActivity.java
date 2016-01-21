@@ -42,7 +42,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private int selectedNavItemId;
 
-    private TextView appStatusEmail;
+    protected TextView appStatusEmail;
 
     @Override
     public void setContentView(int layoutResID)
@@ -89,7 +89,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void setMenuButtons(boolean loggedIn)
+    protected void setMenuButtons(boolean loggedIn)
     {
         Menu menu = navigationView.getMenu();
         MenuItem nav_login = menu.findItem(R.id.nav_login);
@@ -197,27 +197,5 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         app.getBus().unregister(this);
-    }
-
-    @Subscribe
-    public void onUserLoggedInEvent(UserLoggedIn event) {
-        String message = String.format("zalogowano");
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        toast.show();
-
-
-        appStatusEmail.setText(event.getUserEmail());
-        setMenuButtons(true);
-    }
-
-    @Subscribe
-    public void onUserLoggedOutEvent(UserLoggedOut event) {
-        String message = String.format("wylogowano");
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        toast.show();
-
-        String email = app.prefs.GetUserEmail().get();
-        appStatusEmail.setText(email);
-        setMenuButtons(false);
     }
 }
