@@ -86,12 +86,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         attemptLogin();
     }
 
-    @Click(R.id.register_new_account_button)
-    @Background
-    void onRegisterClick(View view) {
-        restManager.getAuthenticationRest().testPass();
-    }
-
     //disable haburger for this activity
     @Override
     protected boolean useDrawerToggle() {
@@ -287,53 +281,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
-
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserRegisterTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            //WebRequestHandler.executePost()
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            //mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            //mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
 
