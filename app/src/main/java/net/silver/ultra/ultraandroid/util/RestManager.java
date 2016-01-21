@@ -12,6 +12,7 @@ import net.silver.ultra.ultraandroid.Authentication.model.LoginResponse;
 import net.silver.ultra.ultraandroid.Authentication.rest.AuthenticationRest;
 import net.silver.ultra.ultraandroid.MyApp;
 import net.silver.ultra.ultraandroid.R;
+import net.silver.ultra.ultraandroid.googledirections.GoogleDirectionsRestService;
 import net.silver.ultra.ultraandroid.parking.errorhandlers.ParkingServiceErrorHandler;
 import net.silver.ultra.ultraandroid.parking.rest.ParkingRestService;
 
@@ -46,6 +47,8 @@ public class RestManager {
     protected AuthenticationRest authenticationRest;
     @RestService
     ParkingRestService parkingRestService;
+    @RestService
+    GoogleDirectionsRestService directionsRestService;
 
     @AfterInject
     void init(){
@@ -65,6 +68,8 @@ public class RestManager {
     }
 
     public ParkingRestService getParkingRestService() { return parkingRestService; }
+
+    public GoogleDirectionsRestService getDirectionsRestService() { return directionsRestService; }
 
     public boolean Login(LoginParams params) {
         LoginResponse response = authenticationRest.login(params);

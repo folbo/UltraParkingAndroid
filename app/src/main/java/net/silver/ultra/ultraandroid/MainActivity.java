@@ -1,5 +1,6 @@
 package net.silver.ultra.ultraandroid;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,9 +10,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
 import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
@@ -22,6 +26,8 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +43,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     protected Location myLocation;
     protected List<ParkingViewModel> parkings = new ArrayList<>();
     private HashMap<Marker, ParkingViewModel> MarkerParkingMap = new HashMap<Marker, ParkingViewModel>();
+    private double nearestParkingLongitude;
+    private double nearestParkingLatitude;
+    Polyline routePolyline;
+
 
     @AfterViews
     void initViews(){
@@ -47,8 +57,102 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @Click(R.id.fab)
     public void OnFabClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
+        //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+        //get nearest parking with free places
+
+        if(myLocation == null) return;
+        if(parkings == null) return;
+
+        double min = 10000;
+        for(Marker m : MarkerParkingMap.keySet())
+        {
+            if(MarkerParkingMap.get(m).getFreePlaces() == 0) continue;
+
+            double dist = distFrom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), m.getPosition());
+            if( dist < min ) {
+                nearestParkingLatitude = m.getPosition().latitude;
+                nearestParkingLongitude = m.getPosition().longitude;
+
+                min = dist;
+            }
+        }
+
+        if(nearestParkingLatitude != 0 && nearestParkingLongitude != 0) {
+            testDirections();
+        }
+    }
+
+    @Background
+    void testDirections(){
+            if (myLocation == null) return;
+
+            String route = restManager.getDirectionsRestService().getRoute(myLocation.getLatitude(), myLocation.getLongitude(), nearestParkingLatitude, nearestParkingLongitude);
+
+            try {
+                JSONObject result = new JSONObject(route);
+                JSONArray routes = result.getJSONArray("routes");
+
+                long distanceForSegment = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getInt("value");
+
+                JSONArray steps = routes.getJSONObject(0).getJSONArray("legs")
+                        .getJSONObject(0).getJSONArray("steps");
+
+                final List<LatLng> lines = new ArrayList<LatLng>();
+
+                for (int i = 0; i < steps.length(); i++) {
+                    String polyline = steps.getJSONObject(i).getJSONObject("polyline").getString("points");
+
+                    for (LatLng p : decodePolyline(polyline)) {
+                        lines.add(p);
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(routePolyline != null)
+                            routePolyline.remove();
+                        routePolyline = map.addPolyline(new PolylineOptions().addAll(lines).width(3).color(Color.RED));
+                    }
+                });
+            } catch (Exception e) {
+            }
+
+    }
+
+    private List<LatLng> decodePolyline(String encoded) {
+
+        List<LatLng> poly = new ArrayList<LatLng>();
+
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((double) lat / 1E5, (double) lng / 1E5);
+            poly.add(p);
+        }
+
+        return poly;
     }
 
     @Override
@@ -70,6 +174,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
 
         getAllParkings();
+
+
+        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                myLocation = location;
+            }
+        });
     }
 
     @Background
@@ -115,6 +227,24 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 .e_parkingOwnerName(parking.getOwnerName())
                 .start();
         return true;
+    }
+
+    public double distFrom (LatLng loc1, LatLng loc2 )
+    {
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(loc2.latitude - loc1.latitude);
+        double dLng = Math.toRadians(loc2.longitude - loc1.longitude);
+
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(loc1.latitude)) * Math.cos(Math.toRadians(loc2.latitude)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+
+        int meterConversion = 1609;
+
+        return new Double(dist * meterConversion).doubleValue();
     }
 }
 
