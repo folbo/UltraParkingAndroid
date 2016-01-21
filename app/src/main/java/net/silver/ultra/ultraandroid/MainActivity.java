@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import net.silver.ultra.ultraandroid.Authentication.model.StatusResponse;
 import net.silver.ultra.ultraandroid.parking.ParkingReservationActivity_;
 import net.silver.ultra.ultraandroid.parking.model.ParkingModel;
 
@@ -56,6 +57,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     private HashMap<Marker, ParkingViewModel> MarkerParkingMap = new HashMap<Marker, ParkingViewModel>();
 
     Marker nearestMarker;
+
     private double nearestParkingLongitude;
     private double nearestParkingLatitude;
     Polyline routePolyline;
@@ -217,6 +219,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         removePolyline();
 
         ParkingModel[] all = restManager.getParkingRestService().getAll();
+        StatusResponse status = restManager.getAuthenticationRest().getStatus();
 
         if(all == null) return;
 
@@ -226,8 +229,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             model.setOwnerName(parking.getOwnerName());
             model.setFreePlaces(parking.getFreePlacesCount());
             model.setTotalPlaces(parking.getTotalPlacesCount());
-            model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())));
             model.setParkingId(parking.getId());
+            if(status.getReserverParkingId() != null && status.getReserverParkingId().equals(model.getParkingId())) {
+                model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            }
+            else
+                model.setMarkerOptions(new MarkerOptions().position(new LatLng(parking.getLocationLatitude(), parking.getLocationLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
             parkings.add(model);
         }

@@ -2,6 +2,7 @@ package net.silver.ultra.ultraandroid.Authentication.rest;
 
 import net.silver.ultra.ultraandroid.Authentication.model.LoginParams;
 import net.silver.ultra.ultraandroid.Authentication.model.LoginResponse;
+import net.silver.ultra.ultraandroid.Authentication.model.StatusResponse;
 
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Post;
@@ -27,6 +28,10 @@ public interface AuthenticationRest extends RestClientRootUrl, RestClientErrorHa
     @Get("/test/authtest")
     @RequiresCookie({".AspNet.ApplicationCookie"})
     String testPass();
+
+    @Get("/account/status")
+    @RequiresCookie({".AspNet.ApplicationCookie"})
+    StatusResponse getStatus();
 
     String getCookie(String name);
     void setCookie(String name, String value);
